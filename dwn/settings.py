@@ -29,7 +29,8 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:8080',
-    'callsumo.ngrok.io'
+    'callsumo.ngrok.io',
+    '45.55.200.192'
 )
 CORS_ALLOW_CREDENTIALS = True
 
@@ -39,6 +40,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'utils.paginators.CTMPagination',
+    'PAGE_SIZE': 10
 }
 
 
@@ -66,12 +69,14 @@ THIRD_PARTY_APPS = [
     'rest_framework.authtoken',
     'rolepermissions',
     'corsheaders',
+    'django_extensions'
 ]
 
 LOCAL_APPS = [
     'authentication',
     'accounts',
     'users',
+    'utils'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

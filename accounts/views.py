@@ -1,12 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
-from utils.ctm import CTMAPI
-
-from .serializers import AccountsSerializer
+from .serializers import AccountsSerializer, MembershipSerializer
 from .models import Account
-# Create your views here.
+
+
+from users.roles import *
 
 
 class AccountsViewSet(viewsets.ModelViewSet):
@@ -18,17 +17,13 @@ class AccountsViewSet(viewsets.ModelViewSet):
         return profile.account_set.all()
 
 
-class AccountCalls(APIView):
+class AvailableAdminAccountsView(APIView):
 
-    def get(self, request, account_id=None):
-        page = request.GET.get('page', 1)
-        ctm_api = CTMAPI()
-        response = ctm_api.get_calls(account_id, page)
-        return Response(response)
+    def get(self, request):
+        profile = request.user.profile
+        response = MembershipSerializer(instance=profile.membership_set.all(), many=True).data\
+            if profile.agency_admin \
+            else MembershipSerializer(profile.membership_set.filter(role=ADMIN_ROLE),
+                                      many=True).data
 
-    def post(self, request, account_id=None, call_id=None):
-        data = request.data
-        print(data)
-        ctm_api = CTMAPI()
-        response = ctm_api.update_call(account_id, call_id, data)
         return Response(response)

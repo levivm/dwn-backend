@@ -1,13 +1,14 @@
 from rest_framework.generics import GenericAPIView
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
 from users.serializers import ProfilesSerializer
 from users.models import Profile
+from users.roles import ROLES_ACCESS_LEVEL
+
 
 from .serializers import AuthTokenSerializer
-
-# Create your views here.
 
 
 class LoginView(GenericAPIView):
@@ -22,5 +23,6 @@ class LoginView(GenericAPIView):
         user = serializer.validated_data['user']
         profile = Profile.objects.get(user=user)
         profile_data = ProfilesSerializer(profile).data
-        data = {'token': user.auth_token.key, 'user': profile_data}
+        data = {'token': user.auth_token.key, 'user': profile_data,
+                'roles_access_level': ROLES_ACCESS_LEVEL}
         return Response(data)

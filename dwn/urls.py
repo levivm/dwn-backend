@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/auth/', include('authentication.urls', namespace='auth')),
     url(r'^api/accounts/', include('accounts.urls', namespace='accounts')),
-    url(r'^api/users/', include('users.urls', namespace='users')),
+    url(r'^api/accounts/', include('calls.urls', namespace='calls')),
+    url(r'^api/accounts/', include('users.urls', namespace='users')),
 ]

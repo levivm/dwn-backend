@@ -1,24 +1,18 @@
 from django.conf.urls import url
 
-from .views import AccountsViewSet, AccountCalls
+from .views import AccountsViewSet, AvailableAdminAccountsView
 
 urlpatterns = [
-    # auth:login - api/accounts/
+    # accounts:accounts - api/accounts/
     url(
         regex=r'^/?$',
         view=AccountsViewSet.as_view({'get': 'list', 'post': 'create'}),
         name='accounts'
     ),
-    # auth:login - api/accounts/:account_id/calls
+    # accounts:available_admin_accounts - api/accounts/available
     url(
-        regex=r'^(?P<account_id>\d+)/calls/?$',
-        view=AccountCalls.as_view(),
-        name='accounts_calls'
-    ),
-    # auth:login - api/accounts/:account_id/calls/:call_id/
-    url(
-        regex=r'^(?P<account_id>\d+)/calls/(?P<call_id>\d+)/?$',
-        view=AccountCalls.as_view(),
-        name='accounts_calls_edit'
+        regex=r'^admin/?$',
+        view=AvailableAdminAccountsView.as_view(),
+        name='available_admin_accounts'
     ),
 ]

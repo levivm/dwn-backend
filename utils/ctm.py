@@ -36,5 +36,8 @@ class CTMAPI():
 
     def update_call(self, account_id, call_id, data):
         endpoint = '/accounts/%s/calls/%s/modify' % (account_id, call_id)
-        print(endpoint)
+        return self.post(endpoint, data)
+
+    def update_call_sale(self, account_id, call_id, data):
+        endpoint = '/accounts/%s/calls/%s/sale' % (account_id, call_id)
         return self.post(endpoint, data)

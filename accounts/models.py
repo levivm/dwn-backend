@@ -1,6 +1,7 @@
 from django.db import models
 
 from users.models import Profile
+from users.roles import ROLES_CHOICES
 
 
 class Business(models.Model):
@@ -22,12 +23,14 @@ class Account(models.Model):
 
 class Membership(models.Model):
 
-    ROLES_CHOICES = (
-        ('admin', 'Administrator'),
-        ('report_manager', 'Report Manager'),
-        ('call_manager', 'Call Manager'),
-    )
-
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     role = models.CharField(choices=ROLES_CHOICES, max_length=40)
+
+    @property
+    def account_name(self):
+        return self.account.name
+
+    @property
+    def role_name(self):
+        return self.get_role_display()
