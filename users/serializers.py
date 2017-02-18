@@ -20,7 +20,8 @@ class UsersSerializer(serializers.ModelSerializer):
             'email',
         )
 
-    def validate_email(self, email):
+    @classmethod
+    def check_email(cls, email):
         if User.objects.filter(email=email).exists():
             raise serializers.ValidationError("This email already used")
         return email
@@ -31,6 +32,20 @@ class UsersSerializer(serializers.ModelSerializer):
         username = Profile.generate_username(first_name, last_name)
         data['username'] = username
         return data
+
+    def create(self, validated_data):
+
+        # Validate email
+        UsersSerializer.check_email(validated_data['email'])
+
+        request = self.context.get('request')
+        password = request.data.get('user').get('password')
+        user = super(UsersSerializer, self).create(validated_data)
+
+        # Set user password
+        user.set_password(password)
+        user.save()
+        return user
 
 
 class ProfilesSerializer(serializers.ModelSerializer):
@@ -75,7 +90,7 @@ class ProfilesSerializer(serializers.ModelSerializer):
             return
 
         membership = obj.membership_set.filter(account__call_metrics_id=account_id).first()
-        return membership.role if membership else None
+        return membership.get_role_display() if membership else None
 
     def assign_role(self, data, profile):
         memberhsip_data = {
@@ -104,18 +119,20 @@ class ProfilesSerializer(serializers.ModelSerializer):
                 serializer.save()
 
     def create(self, validated_data):
-        # Creating users
+
+        # Create user
         user_data = validated_data.pop('user')
-        serializer = UsersSerializer(data=user_data)
+        serializer = UsersSerializer(data=user_data,
+                                     context={'request': self.context.get('request')})
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
         profile = Profile.objects.create(user=user, **validated_data)
 
         # create user token
         Token.objects.get_or_create(user=user)
 
-        # Creating roles
-
+        # Create roles
         data = self.context.get('request').data
         if not data.get('role') or not data.get('account'):
             raise serializers.ValidationError({'role': ["Must select a role"]})
@@ -127,7 +144,12 @@ class ProfilesSerializer(serializers.ModelSerializer):
         user_data = validated_data.pop('user')
         instance.update_user(user_data)
 
-        # Creating roles
+        # Validate email
+        email = user_data.get('email')
+        if not self.instance.user.email == email:
+            UsersSerializer.check_email(email)
+
+        # Create roles
         data = self.context.get('request').data
         self.assign_roles(**{'accounts_roles': data.get('accounts_roles'),
                           'profile': instance})

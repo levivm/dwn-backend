@@ -12,8 +12,8 @@ urlpatterns = [
     ),
     # users:list - api/accounts/:account_id/users/:user_id
     url(
-        regex=r'^(?P<account_id>\d+)/users/(?P<pk>\d+)?$',
-        view=ProfileViewSet.as_view({'put': 'update'}),
+        regex=r'^(?P<account_id>\d+)/users/(?P<pk>\d+)/?$',
+        view=ProfileViewSet.as_view({'get': 'retrieve', 'put': 'update'}),
         name='list'
     ),
 

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from .serializers import ProfilesSerializer
 from .models import Profile
-from .roles import ROLES_CHOICES
+from .roles import ROLES_CHOICES, AGENCY_ADMIN, AGENCY_ADMIN_DISPLAY
 
 # Create your views here.
 

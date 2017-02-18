@@ -44,12 +44,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-
-# PERMISSIONS ROLES
-ROLEPERMISSIONS_MODULE = 'users.roles'
+# EMAIL BACKEND
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # AUTH BACKEND
-
 AUTHENTICATION_BACKENDS = DEFAULT_SETTINGS.AUTHENTICATION_BACKENDS + [
     'authentication.backends.EmailAuthBackend',
 ]
@@ -67,7 +65,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
-    'rolepermissions',
     'corsheaders',
     'django_extensions'
 ]
@@ -169,3 +166,7 @@ CTM_TOKEN = "097a539eb55a80027731ba7f5b87acba"
 CTM_SECRET = "1355c2a77dce366ab4dd6c6e5b7ec900c732"
 CTM_HOST = "https://api.calltrackingmetrics.com"
 CTM_API_V = "/api/v1"
+
+# FRONTEND URL
+FRONTEND_URL = 'http://localhost:8080'
+
