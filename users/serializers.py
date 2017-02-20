@@ -23,7 +23,7 @@ class UsersSerializer(serializers.ModelSerializer):
     @classmethod
     def check_email(cls, email):
         if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError("This email already used")
+            raise serializers.ValidationError({'email': ["This email already used"]})
         return email
 
     def validate(self, data):
@@ -40,6 +40,8 @@ class UsersSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
         password = request.data.get('user').get('password')
+        if not password:
+            raise serializers.ValidationError({'password': ["This field is required"]})
         user = super(UsersSerializer, self).create(validated_data)
 
         # Set user password
@@ -141,13 +143,16 @@ class ProfilesSerializer(serializers.ModelSerializer):
         return profile
 
     def update(self, instance, validated_data):
+
         user_data = validated_data.pop('user')
-        instance.update_user(user_data)
 
         # Validate email
         email = user_data.get('email')
         if not self.instance.user.email == email:
             UsersSerializer.check_email(email)
+
+        # Updating django user object
+        instance.update_user(user_data)
 
         # Create roles
         data = self.context.get('request').data

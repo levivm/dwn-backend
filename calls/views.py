@@ -11,8 +11,8 @@ class CallsGetCreateView(APIView):
     def get(self, request, account_id=None):
         page = request.GET.get('page', 1)
         ctm_api = CTMAPI()
-        # response = ctm_api.get_calls(account_id, page)
-        return Response(DUMMY_RESPONSE)
+        response = ctm_api.get_calls(account_id, page)
+        return Response(response)
 
     def post(self, request, account_id=None, call_id=None):
         data = request.data
