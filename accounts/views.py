@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from .serializers import AccountsSerializer, MembershipSerializer
 from .models import Account
 
+from utils.ctm import CTMAPI
+
 
 from users.roles import *
 
@@ -26,4 +28,12 @@ class AvailableAdminAccountsView(APIView):
             else MembershipSerializer(profile.membership_set.filter(role=ADMIN_ROLE),
                                       many=True).data
 
+        return Response(response)
+
+
+class AccountSourcesView(APIView):
+
+    def get(self, request, account_id=None):
+        ctm_api = CTMAPI()
+        response = ctm_api.get_sources(account_id)
         return Response(response)

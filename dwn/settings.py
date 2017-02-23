@@ -75,6 +75,7 @@ LOCAL_APPS = [
     'authentication',
     'accounts',
     'users',
+    'calls',
     'utils'
 ]
 
@@ -116,23 +117,23 @@ WSGI_APPLICATION = 'dwn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dwn',
-        'USER': 'dwn',
-        'HOST': 'db',
-        'PASSWORD': 'dwn',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'dwn',
+#         'USER': 'dwn',
+#         'HOST': 'db',
+#         'PASSWORD': 'dwn',
+#         'PORT': 5432,
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -176,6 +177,7 @@ STATIC_URL = '/static/'
 
 CTM_TOKEN = "097a539eb55a80027731ba7f5b87acba"
 CTM_SECRET = "1355c2a77dce366ab4dd6c6e5b7ec900c732"
+CALLSUMO_HOST = "https://my.callsumo.com"
 CTM_HOST = "https://api.calltrackingmetrics.com"
 CTM_API_V = "/api/v1"
 
