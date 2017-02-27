@@ -46,8 +46,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-# EMAIL BACKEND
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # AUTH BACKEND
 AUTHENTICATION_BACKENDS = DEFAULT_SETTINGS.AUTHENTICATION_BACKENDS + [
@@ -117,23 +115,23 @@ WSGI_APPLICATION = 'dwn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dwn',
-#         'USER': 'dwn',
-#         'HOST': 'db',
-#         'PASSWORD': 'dwn',
-#         'PORT': 5432,
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dwn',
+        'USER': 'dwn',
+        'HOST': 'db',
+        'PASSWORD': 'dwn',
+        'PORT': 5432,
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -170,11 +168,21 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
 STATIC_URL = '/static/'
 
-# CTM AUTH
+# EMAIL BACKEND
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
+# SMTP SETTINGS
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'levi@mrsft.com'
+EMAIL_HOST_PASSWORD = 'Gramosa2405.'
+EMAIL_PORT = 587
+
+
+# CTM AUTH
 CTM_TOKEN = "097a539eb55a80027731ba7f5b87acba"
 CTM_SECRET = "1355c2a77dce366ab4dd6c6e5b7ec900c732"
 CALLSUMO_HOST = "https://my.callsumo.com"
@@ -182,5 +190,4 @@ CTM_HOST = "https://api.calltrackingmetrics.com"
 CTM_API_V = "/api/v1"
 
 # FRONTEND URL
-FRONTEND_URL = 'http://localhost:8080'
-
+FRONTEND_URL = 'http://dg.callsumo.com'

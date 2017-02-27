@@ -21,7 +21,6 @@ class CTMAPI():
             'authorization': 'Basic %s' % self.auth,
             'Content-Type': 'application/json'
         }
-        print(self.auth)
 
     def get(self, endpoint):
         url = "%s%s%s" % (self.CTM_HOST, self.CTM_API_V, endpoint)
@@ -29,12 +28,10 @@ class CTMAPI():
         return response.json()
 
     def get_file(self, endpoint, content_type):
-        url = "%s%s%s" % (self.CALLSUMO_HOST, self.CTM_API_V, endpoint)
-        # self.headers.update({
-            # 'Content-Type': content_type
-        # })
-        print(url)
-
+        url = "%s%s%s" % (self.CTM_HOST, self.CTM_API_V, endpoint)
+        self.headers.update({
+            'Content-Type': content_type
+        })
         response = requests.get(url, headers=self.headers)
         return response
 
@@ -63,9 +60,8 @@ class CTMAPI():
         endpoint = '/accounts/%s/calls/%s/sale' % (account_id, call_id)
         return self.post(endpoint, data)
 
-    def get_call_audio(self, account_id, call_id):
-        # response = self.get(url)
-        endpoint = '/accounts/%s/calls/%s/recording.mp3' % (36039, 'CA6833625884d0e681a1a3a71f6897bff7')
+    def get_call_audio(self, account_id, call_sid):
+        endpoint = '/accounts/%s/calls/%s/recording' % (account_id, call_sid)
         content_type = 'audio/mpeg'
         return self.get_file(endpoint, content_type)
 
