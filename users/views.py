@@ -1,6 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 
 from .serializers import ProfilesSerializer
 from .models import Profile
@@ -10,6 +12,7 @@ from .roles import ROLES_CHOICES, AGENCY_ADMIN, AGENCY_ADMIN_DISPLAY
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
     serializer_class = ProfilesSerializer
     queryset = Profile.objects.all()
     model = Profile
@@ -25,6 +28,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 
 class UsersRolesView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         roles = map(lambda role: {'name': role[0], 'value': role[1]}, ROLES_CHOICES)

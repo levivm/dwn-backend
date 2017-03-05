@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from .views import AccountsViewSet, AvailableAdminAccountsView, AccountSourcesView
+from .views import AccountsViewSet, AvailableAdminAccountsView, AccountSourcesView,\
+    AccountReportsView
 
 urlpatterns = [
     # accounts:accounts - api/accounts/
@@ -15,6 +16,13 @@ urlpatterns = [
         regex=r'^(?P<account_id>\d+)/sources/?$',
         view=AccountSourcesView.as_view(),
         name='accounts_sources'
+    ),
+
+    # accounts:accounts_reports - api/accounts/:account_id/reports/series
+    url(
+        regex=r'^(?P<account_id>\d+)/reports/series/?$',
+        view=AccountReportsView.as_view(),
+        name='accounts_reports'
     ),
 
     # accounts:available_admin_accounts - api/accounts/available

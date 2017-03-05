@@ -31,7 +31,7 @@ urlpatterns = [
     ),
     # calls:accounts_calls_audio - api/accounts/:account_id/calls/:call_id/audio
     url(
-        regex=r'^(?P<account_id>\d+)/calls/(?P<call_sid>[0-9A-Za-z]+)/audio/?$',
+        regex=r'^(?P<account_id>\d+)/calls/(?P<call_sid>[0-9A-Za-z]+)/audio.wav/?$',
         view=CallAudioView.as_view(),
         name='accounts_calls_audio'
     ),
