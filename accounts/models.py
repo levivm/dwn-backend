@@ -27,6 +27,13 @@ class Membership(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     role = models.CharField(choices=ROLES_CHOICES, max_length=40)
 
+    def __str__(self):
+        return "%s - %s - %s" % (
+            self.profile.user.email,
+            self.account.name,
+            self.get_role_display()
+        )
+
     @property
     def account_name(self):
         return self.account.name

@@ -22,7 +22,6 @@ class Profile(UpdateableMixin, models.Model):
         counter = User.objects.filter(first_name=first_name, last_name=last_name).count()
         if counter > 0:
             username += '%s' % (counter + 1)
-        print(username)
         return username
 
     def update_user(self, data):

@@ -75,4 +75,32 @@ class CTMAPI():
         range_header = request.META.get("HTTP_RANGE")
         return self.get_file(endpoint, content_type, range_header)
 
+    def get_all_accounts(self):
+        endpoint = '/accounts?names=1&all=1'
+        return self.get(endpoint)
+
+    def get_users_account(self, account_id):
+        endpoint = '/accounts/%s/users/' % (account_id,)
+        return self.get(endpoint)
+
+    def get_all_users(self, account_id, page=1):
+        endpoint = '/accounts/%s/users/?page=%s' % (
+            account_id,
+            page
+        )
+        response = self.get(endpoint)
+        data = response.get('users')
+        while response.get('next_page'):
+            next_url = '/accounts/%s/users/?page=%s' % (
+                account_id,
+                page
+            )
+            response = self.get(next_url)
+            data += response.get('users')
+            page += 1
+
+        return data
+
+
+
 # data-audio-mp3="https://my.callsumo.com/api/v1/accounts/36039/calls/CA6833625884d0e681a1a3a71f6897bff7/recording.mp3"

@@ -16,8 +16,8 @@ class BaseEmail(object):
 
         self.email = EmailMultiAlternatives(self.subject, text_content)
         self.email.attach_alternative(html_content, "text/html")
-        self.email.from_email = '(ungleich) ungleich Support <info@ungleich.ch>'
-        self.email.to = [kwargs.get('to', 'info@ungleich.com')]
+        self.email.from_email = '(Dental Web Now) DWN Support <levi@mrsft.com>'
+        self.email.to = [kwargs.get('to', 'levi@mrsft.com')]
 
     def send(self):
         self.email.send()
