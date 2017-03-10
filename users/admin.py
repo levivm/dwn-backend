@@ -23,10 +23,14 @@ class ProfileAdminForm(forms.ModelForm):
 
     def create_admin_memberships(self, business, profile):
         accounts = business.accounts.all()
-        memberships = []
         for account in accounts:
-            memberships += [Membership(profile=profile, account=account, role=ADMIN_ROLE)]
-        Membership.objects.bulk_create(memberships)
+            Membership.objects.update_or_create(
+                profile=profile,
+                account=account,
+                defaults={
+                    'role': ADMIN_ROLE
+                }
+            )
 
     def save(self, commit=True):
         business = self.cleaned_data.get('business', None)

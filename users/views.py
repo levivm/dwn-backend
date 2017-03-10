@@ -3,16 +3,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+from utils.permissions import hasAdminAccessLevel
 
 from .serializers import ProfilesSerializer
 from .models import Profile
 from .roles import ROLES_CHOICES, AGENCY_ADMIN, AGENCY_ADMIN_DISPLAY
 
+
 # Create your views here.
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, hasAdminAccessLevel)
     serializer_class = ProfilesSerializer
     queryset = Profile.objects.all()
     model = Profile

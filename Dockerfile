@@ -5,6 +5,7 @@ WORKDIR /code
 ADD requirements.txt /code/
 RUN pip install -r requirements.txt
 ADD . /code
+RUN python manage.py collectstatic --noinput
 
 # Gunicorn logs
 RUN mkdir /srv/logs/

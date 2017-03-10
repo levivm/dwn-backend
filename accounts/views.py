@@ -6,8 +6,7 @@ from .serializers import AccountsSerializer, MembershipSerializer
 from .models import Account
 
 from utils.ctm import CTMAPI
-
-
+from utils.permissions import hasReportManagerAccessLevel
 from users.roles import *
 
 
@@ -15,10 +14,11 @@ class AccountsViewSet(viewsets.ModelViewSet):
     serializer_class = AccountsSerializer
     model = Account
     permission_classes = (IsAuthenticated,)
+    pagination_class = None
 
     def get_queryset(self):
         profile = self.request.user.profile
-        return profile.account_set.all()
+        return profile.account_set.all() if not profile.agency_admin else Account.objects.all()
 
 
 class AvailableAdminAccountsView(APIView):
@@ -44,7 +44,7 @@ class AccountSourcesView(APIView):
 
 
 class AccountReportsView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, hasReportManagerAccessLevel)
 
     def get(self, request, account_id=None):
         ctm_api = CTMAPI()

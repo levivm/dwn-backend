@@ -1,7 +1,7 @@
 from django.db import models
 
 from users.models import Profile
-from users.roles import ROLES_CHOICES
+from users.roles import ROLES_CHOICES, ROLES_ACCESS_LEVEL
 
 
 class Business(models.Model):
@@ -18,7 +18,10 @@ class Account(models.Model):
     profiles = models.ManyToManyField(Profile, through='Membership')
 
     def __str__(self):
-        return str(self.call_metrics_id)
+        return "%s-%s" % (
+            str(self.call_metrics_id),
+            self.name
+        )
 
 
 class Membership(models.Model):
@@ -41,3 +44,18 @@ class Membership(models.Model):
     @property
     def role_name(self):
         return self.get_role_display()
+
+    @classmethod
+    def hasAccess(cls, profile, account_id, required_role):
+        try:
+            membership = Membership.objects.get(
+                profile=profile,
+                account__call_metrics_id=account_id
+            )
+        except Membership.DoesNotExist:
+            return False
+
+        current_role = membership.role
+        return True if ROLES_ACCESS_LEVEL.get(current_role) >=\
+            ROLES_ACCESS_LEVEL.get(required_role)\
+            else False
