@@ -1,12 +1,14 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 
 
-from authentication.serializers import ForgotPasswordSerializer, ResetPasswordSerializer
+from .serializers import AuthTokenSerializer, ChangePasswordSerializer,\
+    ForgotPasswordSerializer, ResetPasswordSerializer
 
 from utils.mailer import BaseEmail
 from users.serializers import ProfilesSerializer
@@ -14,7 +16,6 @@ from users.models import Profile, User
 from users.roles import ROLES_ACCESS_LEVEL
 
 
-from .serializers import AuthTokenSerializer
 from .mixins import PasswordResetLinkMixin
 
 
@@ -87,3 +88,24 @@ class ResetPasswordView(GenericAPIView):
         user.set_password(password)
         user.save()
         return Response('OK')
+
+
+class ChangePasswordView(GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ChangePasswordSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        request.user.set_password(serializer.validated_data['password1'])
+        request.user.save(update_fields=['password'])
+
+        return Response('OK')
+
+    def get_serializer_context(self):
+        context = super(ChangePasswordView, self).get_serializer_context()
+        context.update({
+            'user': self.request.user
+        })
+        return context

@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from .views import LoginView, ForgotPasswordView, ResetPasswordView
+from .views import LoginView, ForgotPasswordView, ResetPasswordView,\
+    ChangePasswordView
 
 urlpatterns = [
     # auth:login - api/auth/login
@@ -14,6 +15,12 @@ urlpatterns = [
         regex=r'^forgot-password/?$',
         view=ForgotPasswordView.as_view(),
         name='forgot_password'
+    ),
+    # auth:change-password - api/auth/reset-change-password
+    url(
+        regex=r'^change-password/?$',
+        view=ChangePasswordView.as_view(),
+        name='change_password'
     ),
     # auth:reset_password - api/auth/reset-password
     url(

@@ -143,7 +143,6 @@ class ProfilesSerializer(serializers.ModelSerializer):
         return profile
 
     def update(self, instance, validated_data):
-
         user_data = validated_data.pop('user')
 
         # Validate email
@@ -156,7 +155,13 @@ class ProfilesSerializer(serializers.ModelSerializer):
 
         # Create roles
         data = self.context.get('request').data
-        self.assign_roles(**{'accounts_roles': data.get('accounts_roles'),
-                          'profile': instance})
+        accounts_roles = data.get('accounts_roles')
+        if not accounts_roles:
+            return super(ProfilesSerializer, self).update(instance, validated_data)
+
+        self.assign_roles(
+            **{'accounts_roles': accounts_roles,
+               'profile': instance}
+        )
 
         return super(ProfilesSerializer, self).update(instance, validated_data)

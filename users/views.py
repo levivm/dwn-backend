@@ -8,20 +8,26 @@ from utils.permissions import hasAdminAccessLevel
 from .serializers import ProfilesSerializer
 from .models import Profile
 from .roles import ROLES_CHOICES, AGENCY_ADMIN, AGENCY_ADMIN_DISPLAY
+from .permissions import hasAdminAccessLevelOrCanUpdate
 
 
 # Create your views here.
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated, hasAdminAccessLevel)
+    permission_classes = (IsAuthenticated, hasAdminAccessLevelOrCanUpdate)
     serializer_class = ProfilesSerializer
     queryset = Profile.objects.all()
     model = Profile
+    METHOD_PUT = 'PUT'
 
     def get_queryset(self):
         request = self.request
         queryset = self.queryset
+
+        if request.method == self.METHOD_PUT:
+            return queryset
+
         account_id = request.parser_context\
             .get('kwargs', {}).get('account_id')
         queryset = Profile.objects.filter(membership__account__call_metrics_id=account_id)\

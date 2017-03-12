@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 
+IS_PRODUCTION = os.environ.get('PRODUCTION_SERVER', False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -24,7 +25,7 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 SECRET_KEY = 'ce&@w*$-nj0nsh0a3(j*w3$et_5=r=b075l6xceis_p$aso8u2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if IS_PRODUCTION else True
 
 ALLOWED_HOSTS = ['*']
 
@@ -116,23 +117,24 @@ WSGI_APPLICATION = 'dwn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if not IS_PRODUCTION:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dwn',
-#         'USER': 'dwn',
-#         'HOST': 'db',
-#         'PASSWORD': 'dwn',
-#         'PORT': 5432,
-#     }
-# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'dwn',
+            'USER': 'dwn',
+            'HOST': 'db',
+            'PASSWORD': 'dwn',
+            'PORT': 5432,
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -166,7 +168,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 STATIC_URL = '/static/'
@@ -194,4 +195,4 @@ CTM_HOST = "https://api.calltrackingmetrics.com"
 CTM_API_V = "/api/v1"
 
 # FRONTEND URL
-FRONTEND_URL = 'http://dg.callsumo.com'
+FRONTEND_URL = 'http://localhost:8080'

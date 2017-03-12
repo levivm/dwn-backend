@@ -66,3 +66,24 @@ class ResetPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("The reset password link is no longer valid.")
 
         return data
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+
+    def validate_password(self, password):
+        user = self.context['user']
+        if not user.check_password(password):
+            raise serializers.ValidationError(_('The current password is incorrect.'))
+        return password
+
+    def validate(self, data):
+        password1 = data['password1']
+        password2 = data['password2']
+
+        if password1 != password2:
+            raise serializers.ValidationError(_("The new password doesn't match."))
+
+        return data
