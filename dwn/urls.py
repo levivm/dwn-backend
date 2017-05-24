@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^api/accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^api/accounts/', include('calls.urls', namespace='calls')),
     url(r'^api/accounts/', include('users.urls', namespace='users')),
+    url(r'^api/reports/', include('reports.urls', namespace='reports')),
 ]
 
 if settings.DEBUG:
