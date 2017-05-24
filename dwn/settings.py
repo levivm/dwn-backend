@@ -77,7 +77,8 @@ LOCAL_APPS = [
     'accounts',
     'users',
     'calls',
-    'utils'
+    'utils',
+    'reports'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -118,12 +119,33 @@ WSGI_APPLICATION = 'dwn.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+
+# Callsumo legacy DB
+callsumo_legacy_db = {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'autoreporting',
+    'USER': 'django_devops',
+    'PASSWORD': 'mrsft123',
+    'HOST': '52.40.168.99',
+    'PORT': '3306'
+}
+
+#  If isn't production, use sqlite3, otherwhise use postgresql
 if not IS_PRODUCTION:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+        },
+        'local_callsumo': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'autoreporting',
+            'USER': 'root',
+            # 'PASSWORD': 'mrsft123',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        },
+        'callsumo_legacy': callsumo_legacy_db,
     }
 else:
     DATABASES = {
@@ -134,7 +156,8 @@ else:
             'HOST': 'db',
             'PASSWORD': 'dwn',
             'PORT': 5432,
-        }
+        },
+        'callsumo_legacy': callsumo_legacy_db
     }
 
 # Password validation

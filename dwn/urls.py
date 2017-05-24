@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^api/accounts/', include('calls.urls', namespace='calls')),
     url(r'^api/accounts/', include('users.urls', namespace='users')),
     url(r'^api/accounts/', include('ctm_numbers.urls', namespace='numbers')),
+    url(r'^api/reports/', include('reports.urls', namespace='reports')),
 ]
 
 if settings.DEBUG:

@@ -1,6 +1,7 @@
 import json
 import base64
 import requests
+from urllib.parse import urlencode
 
 from rest_framework import status
 from django.conf import settings
@@ -54,6 +55,37 @@ class CTMAPI():
         endpoint = '/accounts/%s/calls?%s' % (account_id, query_params.urlencode())
         return self.get(endpoint)
 
+    def get_calls_all(self, account_id, query_params, page=1):
+
+        query_params = urlencode(query_params) \
+            if (isinstance(
+                query_params,
+                dict
+            )) else query_params.urlencode()
+
+        # Get the first page
+        endpoint = '/accounts/%s/calls/?page=%s&%s' % (
+            account_id,
+            page,
+            query_params
+        )
+        response = self.get(endpoint)
+        page += 1
+        data = response.get('calls')
+
+        # Iterate to get all next pages
+        while response.get('next_page'):
+            next_url = '/accounts/%s/calls/?page=%s&%s' % (
+                account_id,
+                page,
+                query_params
+            )
+            response = self.get(next_url)
+            data += response.get('calls', [])
+            page += 1
+
+        return data
+
     def get_calls_report(self, account_id, query_params=None):
         endpoint = "/accounts/%s/reports/series?%s" % (account_id, query_params.urlencode())
         return self.get(endpoint)
@@ -62,9 +94,33 @@ class CTMAPI():
         endpoint = '/accounts/%s/tags/' % (account_id,)
         return self.get(endpoint)
 
-    def get_sources(self, account_id):
-        endpoint = '/accounts/%s/sources/' % (account_id,)
-        return self.get(endpoint)
+    def get_sources(self, account_id, page=1):
+        # Get the first page
+        endpoint = '/accounts/%s/sources/?page=%s' % (
+            account_id,
+            page
+        )
+        response = self.get(endpoint)
+        total_pages = response.get('total_pages', [])
+        page += 1
+        data = response.get('sources')
+
+        # Iterate to get all next pages
+        while page <= total_pages:
+            next_url = '/accounts/%s/sources/?page=%s' % (
+                account_id,
+                page
+            )
+            response = self.get(next_url)
+            data += response.get('sources', [])
+            total_pages = response.get('total_pages', [])
+            page += 1
+
+        return {'sources': data}
+
+    # def get_sources(self, account_id):
+    #     endpoint = '/accounts/%s/sources/' % (account_id,)
+    #     return self.get(endpoint)
 
     def update_call(self, account_id, call_id, data):
         endpoint = '/accounts/%s/calls/%s/modify' % (account_id, call_id)
