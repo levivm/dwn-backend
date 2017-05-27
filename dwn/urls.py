@@ -22,10 +22,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^docs/', include('rest_framework_docs.urls')),
     url(r'^api/auth/', include('authentication.urls', namespace='auth')),
     url(r'^api/accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^api/accounts/', include('calls.urls', namespace='calls')),
     url(r'^api/accounts/', include('users.urls', namespace='users')),
+    url(r'^api/accounts/', include('ctm_numbers.urls', namespace='numbers')),
 ]
 
 if settings.DEBUG:
