@@ -4,6 +4,7 @@ from .views import (
     FindNumbersView,
     TrackingNumbersView,
     ReceivingNumbersView,
+    TrackingNumbersRoutesView
 )
 
 urlpatterns = [
@@ -20,17 +21,17 @@ urlpatterns = [
         view=ReceivingNumbersView.as_view(),
         name='receiving_numbers'
     ),
-    # numbers:update_tracking_numbers - api/accounts/:account_id/tracking_numbers/
+    # numbers:tracking_numbers - api/accounts/:account_id/tracking_numbers/
     url(
         regex=r'^(?P<account_id>\d+)/tracking_numbers/?$',
         view=TrackingNumbersView.as_view(),
-        name='update_tracking_numbers'
+        name='tracking_numbers'
     ),
-    # numbers:buy_tracking_number - api/accounts/:account_id/numbers/
+    # numbers:tracking_numbers_routes -api/accounts/:account_id/numbers/:tracking_number_id/routes
     url(
-        regex=r'^(?P<account_id>\d+)/tracking_numbers/?$',
-        view=TrackingNumbersView.as_view(),
-        name='buy_tracking_number'
+        regex=r'^(?P<account_id>\d+)/tracking_numbers/(?P<tracking_number_id>\w+)/routes?$',
+        view=TrackingNumbersRoutesView.as_view(),
+        name='tracking_numbers_routes'
     ),
 
 ]

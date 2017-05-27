@@ -45,6 +45,11 @@ class CTMAPI():
         response = requests.post(url, data=json.dumps(data), headers=self.headers)
         return response
 
+    def put(self, endpoint, data=None):
+        url = "%s%s%s" % (self.CTM_HOST, self.CTM_API_V, endpoint)
+        response = requests.put(url, data=json.dumps(data), headers=self.headers)
+        return response
+
     def get_calls(self, account_id, page, query_params=None):
         endpoint = '/accounts/%s/calls?%s' % (account_id, query_params.urlencode())
         return self.get(endpoint)
@@ -107,6 +112,21 @@ class CTMAPI():
             query_params.urlencode()
         )
         return self.get(endpoint)
+
+    def update_tracking_number_routes(self, account_id, tracking_number_id, data):
+        """
+            Update tracking number routes
+            CTM Endpoint: /accounts/{{account_id}}/numbers/{{number_id}}/dial_routes
+            CTM Endpoint METHOD: PUT
+        """
+        endpoint = '/accounts/%s/numbers/%s/dial_routes' % (
+            account_id,
+            tracking_number_id
+        )
+        return self.put(
+            endpoint,
+            data
+        ).json()
 
     def update_source_tracking_number(self, account_id, tracking_source_id, tracking_number_id):
         endpoint = '/accounts/%s/sources/%s/numbers/%s/add' % (
@@ -182,8 +202,10 @@ class CTMAPI():
             receiving_number_id
         )
 
-    def update_tracking_numbers(self, account_id, data):
-
+    def update_tracking_number(self, account_id, data):
+        """
+            May update source, target number or receiving number for a given trancking number
+        """
         tracking_number_id = data.get('tracking_number_id')
         tracking_source_id = data.get('tracking_source_id')
         receiving_number_id = data.get('receiving_number_id')
@@ -191,6 +213,7 @@ class CTMAPI():
         target_number_id = data.get('target_number_id')
         target_number = data.get('target_number')
 
+        # Update target number for a tracking number
         if receiving_number_id:
             self.update_receiving_number(
                 account_id,
@@ -198,6 +221,7 @@ class CTMAPI():
                 receiving_number_id
             )
 
+        # Create receiving number for a tracking number
         if not receiving_number_id and receiving_number:
             self._create_and_update_receiving_number(
                 account_id,
@@ -205,6 +229,7 @@ class CTMAPI():
                 receiving_number
             )
 
+        # Update source for a tracking number
         if tracking_source_id:
             self.update_source_tracking_number(
                 account_id,
@@ -212,6 +237,7 @@ class CTMAPI():
                 tracking_number_id
             )
 
+        # Update target number for a tracking number
         if target_number_id:
             self.update_target_number(
                 account_id,
@@ -219,6 +245,7 @@ class CTMAPI():
                 target_number_id
             )
 
+        # Create target number for a tracking number
         if not target_number_id and target_number:
             self._create_and_update_target_number(
                 account_id,
