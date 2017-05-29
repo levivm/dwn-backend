@@ -218,5 +218,9 @@ CALLSUMO_HOST = "https://my.callsumo.com"
 CTM_HOST = "https://api.calltrackingmetrics.com"
 CTM_API_V = "/api/v1"
 
+# JOTFORM AUTH
+JOTFORM_API_KEY = "6a2bf80944c3095e2a8a79dc1ad7ba08"
+JOTFORM_HOST = "https://api.jotform.com/"
+
 # FRONTEND URL
 FRONTEND_URL = 'http://localhost:8080'

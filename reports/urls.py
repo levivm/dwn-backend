@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import NewPatientsReportView
+from .views import NewPatientsReportView, JotFormSubmissionsReportView
 
 
 urlpatterns = [
@@ -10,4 +10,11 @@ urlpatterns = [
         view=NewPatientsReportView.as_view(),
         name='new_patients'
     ),
+    # reports:jotform - api/reports/jotform/appointments
+    url(
+        regex=r'^jotform/?$',
+        view=JotFormSubmissionsReportView.as_view(),
+        name='jotform'
+    ),
+
 ]

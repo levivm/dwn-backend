@@ -3,9 +3,7 @@ import base64
 import requests
 from urllib.parse import urlencode
 
-from rest_framework import status
 from django.conf import settings
-from django.http import QueryDict
 
 
 class CTMAPI():
