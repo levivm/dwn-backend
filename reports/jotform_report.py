@@ -10,15 +10,15 @@ from .mixins import ReportByEmailMixin
 class JotFormReport(FilterMixin, ReportByEmailMixin):
     """
         A report getting data from JotForm using their API
-
-        Attributes:
-            jotform_api Instance for getting access to JotForm API
-            office_name The office name used to fetch data from JotForm
-
     """
     APPOINTMENT_FORM_STR = 'Appointment Form'
 
     def __init__(self, office_name=None, *args, **kwargs):
+        """
+         Attributes:
+            jotform_api Instance for getting access to JotForm API
+            office_name The office name used to fetch data from JotForm
+        """
         self.jotform_api = JotFormAPI()
         self.office_name = office_name
 
