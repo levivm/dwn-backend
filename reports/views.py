@@ -40,7 +40,10 @@ class JotFormSubmissionsReportView(APIView):
         jotform_report = JotFormReport()
 
         # Get submission reports
-        submissions = jotform_report.submissions_report(serializer.data)
+        submissions = jotform_report.submissions_report(
+            serializer.data.get('start_date'),
+            serializer.data.get('end_date'),
+        )
 
         # Insert submissions data into serialiazer for parsing
         response_serializer = JotFormAppointmentRequestsSerializer(

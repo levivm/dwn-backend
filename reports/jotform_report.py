@@ -1,8 +1,6 @@
 import operator
 import json
 
-from easy_pdf.rendering import render_to_pdf
-
 from utils.jotform import JotFormAPI
 from utils.filters_mixin import FilterMixin
 
@@ -13,21 +11,10 @@ class JotFormReport(FilterMixin, ReportByEmailMixin):
 
     APPOINTMENT_FORM_STR = 'Appointment Form'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, office_name=None, *args, **kwargs):
         self.jotform_api = JotFormAPI()
+        self.office_name = office_name
         self.report_data = None
-
-    def pdf_report(self, data):
-        pdf = render_to_pdf(
-            'reports/new_patients.html',
-            {'soy':'yo'},
-        )
-        self.send_report(
-            'levi@mrsft.com',
-            pdf,
-            'JotFormReport'
-        )
-        return pdf
 
     def get_form_by_keywords(self, *keywords):
         forms = self.jotform_api.get_forms().get('content')
@@ -42,10 +29,9 @@ class JotFormReport(FilterMixin, ReportByEmailMixin):
 
         return filtered_forms.pop() if filtered_forms else []
 
-    def submissions_report(self, params):
-        start_date = params.get('start_date')
-        end_date = params.get('end_date')
-
+    def submissions_report(self, type, start_date, end_date):
+        # start_date = params.get('start_date')
+        # end_date = params.get('end_date')
         filters = {
             "created_at:gt": start_date,
             "created_at:lt": end_date,
@@ -54,8 +40,8 @@ class JotFormReport(FilterMixin, ReportByEmailMixin):
         # Get appointment form for given office name
         form = self.get_form_by_keywords(
             *[
-                params.get('office_name'),
-                params.get('type')
+                self.office_name,
+                type
             ]
         )
 
