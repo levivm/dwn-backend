@@ -10,9 +10,15 @@ class BaseEmail(object):
         self.template_path = kwargs.get('template_path')
         self.subject = kwargs.get('subject')
         self.context = kwargs.get('context', {})
-        self.template_full_path = '%s%s' % (self.template_path, self.template_name)
-        text_content = render_to_string('%s.txt' % self.template_full_path, self.context)
-        html_content = render_to_string('%s.html' % self.template_full_path, self.context)
+
+        if self.template_name and self.template_path:
+            self.template_full_path = '%s%s' % (self.template_path, self.template_name)
+            text_content = render_to_string('%s.txt' % self.template_full_path, self.context)
+            html_content = render_to_string('%s.html' % self.template_full_path, self.context)
+        else:
+            text_body = kwargs.get('body')
+            text_content = text_body
+            html_content = text_body
 
         self.email = EmailMultiAlternatives(self.subject, text_content)
         self.email.attach_alternative(html_content, "text/html")
@@ -21,3 +27,14 @@ class BaseEmail(object):
 
     def send(self):
         self.email.send()
+
+
+class ReportEmail(BaseEmail):
+    MIME_TYPE = 'application/pdf'
+
+    def set_attachment(self, file=None, name=None):
+        self.email.attach(
+            name,
+            file,
+            self.MIME_TYPE
+        )

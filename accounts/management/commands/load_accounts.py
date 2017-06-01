@@ -6,7 +6,7 @@ from accounts.models import Business, Account
 
 
 class Command(BaseCommand):
-    help = 'Run the tasks for calculate balance'
+    help = 'Fetch accounts from CTM API'
 
     def handle(self, *args, **options):
         ctm_api = CTMAPI()

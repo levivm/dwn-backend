@@ -95,10 +95,12 @@ class CallSumoReport:
         new_patients_by_source
     ):
 
-        new_patients_data = PatientsReportSerializer(
+        serializer = PatientsReportSerializer(
             new_patients,
             many=True
-        ).data
+        )
+        # Serializer new_patients data
+        new_patients_data = serializer.data
 
         # Order new_patients using fields_to_display list order
         new_patients_by_source_data = OrderedDict(
@@ -108,10 +110,14 @@ class CallSumoReport:
             )
         )
 
-        return [
-            new_patients_data,
-            new_patients_by_source_data
-        ]
+        # Get serializer fields to show
+        fields = list(PatientsReportSerializer().get_fields())
+
+        return {
+            'patients': new_patients_data,
+            'sources': new_patients_by_source_data,
+            'fields': fields
+        }
 
     def get_new_patients_by_source(self, start_date, end_date):
 

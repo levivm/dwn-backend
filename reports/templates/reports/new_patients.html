@@ -1,0 +1,61 @@
+{% extends "easy_pdf/base.html" %}
+
+{% block content %}
+
+
+
+    <table class="ui fixed single line celled table">
+      <thead>
+        <tr>
+            <th>Source</th>
+            <th>New Patients</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for source, value in calls_by_source.items %}
+         <tr>
+            <td>{{source}}</td>
+            <td>{{value}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td>
+                <b>Total</b>
+            </td>
+            <td>
+                <b>{{new_patients|length}}</b>
+            </td>        
+        </tr>
+      </tbody>
+    </table>
+    <table class="ui fixed single line celled table">
+      <thead>
+       
+        <tr>
+        {% for header in headers %}
+            {% if header in fields_to_display %}
+                <th>{{header | title}}</th>
+            {% endif %}
+        {% endfor %}
+        </tr>
+      </thead>
+
+      
+      <tbody>
+      {% for patient in new_patients %}
+        <tr>
+            {% for key, value in patient.items %}
+                {% if key in fields_to_display %}
+                    <td>{{value}}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+       {% endfor %}
+      </tbody>
+    </table>
+
+    <div id="content">
+        <h1>Hi there! {{soy}}</h1>
+    </div>
+{% endblock %}

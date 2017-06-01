@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'django_extensions',
     'rest_framework_docs',
+    'easy_pdf'
 ]
 
 LOCAL_APPS = [

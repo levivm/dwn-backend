@@ -42,15 +42,17 @@ class JotFormAPI:
             JOTFORM Method: GET
         """
 
+        # Encode GET query_params object or a normal dict
         query_params = urlencode(query_params) \
             if (isinstance(
                 query_params,
                 dict
             )) else query_params.urlencode()
 
+        # Endpoint for fetch all form's submissions
         endpoint = '/form/%s/submissions?%s' % (
             form_id,
             query_params
         )
-        print("Endpoint", endpoint)
+
         return self.get(endpoint).json()
