@@ -1,5 +1,6 @@
 
 import itertools
+import colorsys
 from collections import OrderedDict
 
 from .serializers import PatientsReportSerializer
@@ -89,8 +90,31 @@ class CallSumoReport:
             ''
         )
 
-    @staticmethod
+    @classmethod
+    def _get_sources_colors(cls, sources_amount=0):
+        HSV_tuples = [(
+            x * 1.0 / sources_amount,
+            0.5,
+            0.5
+        ) for x in range(sources_amount)]
+        RGB_tuples = list(map(
+            lambda x: colorsys.hsv_to_rgb(*x),
+            HSV_tuples
+        ))
+
+        HEX_colors = [
+            "#{:02x}{:02x}{:02X}".format(
+                int(r * 255),
+                int(g * 255),
+                int(b * 255)
+            ) for (r, g, b) in RGB_tuples
+        ]
+
+        return HEX_colors
+
+    @classmethod
     def _parse_new_patients_by_source_response(
+        cls,
         new_patients,
         new_patients_by_source
     ):
@@ -109,6 +133,21 @@ class CallSumoReport:
                 key=lambda s: s
             )
         )
+
+        # Get rgb colors for all fetched sources
+        colors = cls._get_sources_colors(len(new_patients_by_source_data))
+
+        # Total new patients
+        new_patients_amount = len(new_patients_data)
+
+        # Set percentage for every source and assign it a color
+        for source, data in new_patients_by_source_data.items():
+            percentage = (100 * data.get('value')) / new_patients_amount
+            data.update({
+                'color': colors.pop(),
+                'percentage': "{0:0.1f}".format(percentage)
+            })
+            new_patients_by_source_data.get(source).update(data)
 
         # Get serializer fields to show
         fields = list(PatientsReportSerializer().get_fields())
@@ -131,7 +170,7 @@ class CallSumoReport:
         sources = self._get_sources()
 
         # Init calls by source amount dict, assigning 0 to all sources
-        new_patients_by_source = {source.get('name'): 0 for source in sources}
+        new_patients_by_source = {source.get('name'): {'value': 0} for source in sources}
 
         # Set filters by date
         filters = {
@@ -204,9 +243,18 @@ class CallSumoReport:
                     'source': call_source
                 })
 
+                value_for_source = new_patients_by_source.get(
+                    call_source,
+                    {}
+                ).get(
+                    'value',
+                    0
+                ) + 1
                 # Update calls by source counter
                 new_patients_by_source.update({
-                    call_source: new_patients_by_source.get(call_source, 0) + 1
+                    call_source: {
+                        'value': value_for_source
+                    }
                 })
 
                 # Append this patient to new patients from callsumo

@@ -93,8 +93,7 @@ class OfficeReport(ReportByEmailMixin):
         # Send pdf file to a given email
         self.send_reports(
             emails,
-            pdf_report,
-            'MonthlyReport'
+            pdf_report
         )
 
     def pdf_report(self):
@@ -160,7 +159,7 @@ class OfficeReport(ReportByEmailMixin):
             office_name = account.get('name')
             account_id = account.get('id')
 
-            if account_id not in [75367, 99878]:
+            if account_id not in [75367]:
                 continue
 
             # Generate the report
