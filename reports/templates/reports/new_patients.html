@@ -2,60 +2,255 @@
 
 {% block content %}
 
+    <style>
+    @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css";
+    @page {
+        size: {{ pagesize|default:"A4" }};
+        margin-left: 1.5cm;
+        margin-right: 1.5cm;
+        margin-top: 1.5cm;
+        margin-bottom: 1.5cm;
+    }
+    body{
+      font-family: 'Helvetica', sans-serif;
+      padding: 0 !important;
+      margin: 0 !important;
 
+    }
 
-    <table class="ui fixed single line celled table">
-      <thead>
-        <tr>
-            <th>Source</th>
-            <th>New Patients</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        {% for source, value in calls_by_source.items %}
-         <tr>
-            <td>{{source}}</td>
-            <td>{{value}}</td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <td>
-                <b>Total</b>
-            </td>
-            <td>
-                <b>{{new_patients|length}}</b>
-            </td>        
-        </tr>
-      </tbody>
-    </table>
-    <table class="ui fixed single line celled table">
-      <thead>
-       
-        <tr>
-        {% for header in headers %}
-            {% if header in fields_to_display %}
-                <th>{{header | title}}</th>
-            {% endif %}
-        {% endfor %}
-        </tr>
-      </thead>
-
+   .content-pdf .header-page{
+      margin-top: 25px;
+      margin-bottom: 50px;
+      height: 80px;
+    }
+    .content-pdf .header-page .img{
+      width: 170px;
+    }
+    .content-pdf .header-page .img img{
+      width: 100%;
+    }
+    .content-pdf .header-page .company{
+      float: right;
+      background: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: -41px;
+      text-align: center;
+    }
+    .content-pdf .header-page .company p{
+      margin: 0;
+      color: #444d58;
+      font-weight: 600;
+    }
+    .content-pdf .title-section h3{
+      color: #444d58;
+      font-size: 22px;
+      text-align: left;
+    }
+    .content-pdf .boxs-summary{
+        width: 90%;
+        margin: 0 auto;
+    }
+    .content-pdf .boxs-summary .box{
+      background: #fff;
+      padding: 20px;
+      width: 160px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-left: 90px;
+    }
+    .content-pdf .boxs-summary .box i{
+      color: #acb5bf;
+      float: right;
+      font-size: 50px;
+      margin-top: -58px;
+      margin-right: -5px;
+    }
+    .content-pdf .boxs-summary .box h4{
+      margin: 0;
+      font-size: 40px;
+      color: #444d58;
       
-      <tbody>
-      {% for patient in new_patients %}
-        <tr>
-            {% for key, value in patient.items %}
-                {% if key in fields_to_display %}
-                    <td>{{value}}</td>
-                {% endif %}
-            {% endfor %}
-        </tr>
-       {% endfor %}
-      </tbody>
-    </table>
+    }
+    .content-pdf .boxs-summary .box.green h4{
+      color: #2ab4c0;
+      
+    }
+    .content-pdf .boxs-summary .box p{
+      margin: 0;
+      font-weight: 700;
+      color: #908c8c;
+      margin-top: 6px;
+    }
 
-    <div id="content">
-        <h1>Hi there! {{soy}}</h1>
+    .table-bordered, .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+        border: 1px solid #e7ecf1;
+    }
+
+    .table-striped>tbody>tr:nth-of-type(odd) {
+        background-color: #fbfcfd;
+    }
+    .table-condensed>tbody>tr>td, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>td, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>thead>tr>th {
+        padding: 5px;
+    }
+    .table td, .table th {
+        font-size: 12px;
+    }
+    .table{
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .table thead{
+        text-align: left;
+    }
+    .box-table{
+        background: #fff;
+        /* padding: 0 20px 20px; */
+        border-radius: 4px;
+        margin-bottom: 30px;
+        margin-top: 30px;
+        width: 100%;
+        border: 1px solid rgba(68, 77, 88, 0.45);
+    }
+    .box-table .header{
+      background: #444d58;
+      color: #fff;
+      padding: 10px 9px;
+      border-radius: 4px 4px 0px 0px;
+    }
+    .box-table .body-table{
+      padding: 15px;
+    }
+    .box-table .header h4{
+      margin:0;
+    }
+  </style>
+    <div class="content-pdf">
+      <div class="header-page">
+      <div class="img">
+        <img src="https://s3.amazonaws.com/ct0/logos/agency/logo/96/58b7770156b1a2f3b840b26799d8876df0979192?1493588234" alt="">
+      </div>
+      <div class="company">
+        <a href="">Dr KA</a>
+        <p>Monthly Report</p>
+        <p>May 2017</p>
+      </div>
     </div>
+    <div class="title-section">
+      <h3>CALLS PERFORMANCE</h3>
+    </div>
+    <div class="boxs-summary">
+      <div class="box">
+        <h4>346</h4>
+        <p>Total Calls</p>
+        <i class="fa fa-phone" aria-hidden="true"></i>
+
+      </div>
+      <div class="box green">
+        <h4>120</h4>
+        <p>New Patiens</p>
+        <i class="fa fa-address-book-o" aria-hidden="true"></i>
+      </div>
+    </div>
+      <div class="box-table">
+        <div class="header">
+          <h4>Calls By Source</h4>
+        </div>
+        <div class="body-table">
+          <table class="table table-bordered table-striped table-condensed flip-content">
+            <thead>
+              <tr>
+                  <th>Source</th>
+                  <th>New Patients</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            {% for source, value in callsumo.sources.items %}
+             <tr>
+                <td>{{source}}</td>
+                <td>{{value}}</td>
+            </tr>
+            {% endfor %}
+              <tr>
+                <td>
+                    <b>Total</b>
+                </td>
+                <td>
+                    <b>{{new_patients|length}}</b>
+                </td>        
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        
+      </div>
+      <div class="box-table">
+        <div class="header">
+          <h4>New Patients</h4>
+        </div>
+        <div class="body-table">
+          <table class="table table-bordered table-striped table-condensed flip-content">
+              <thead>
+               
+                <tr>
+                    {% for header in callsumo.fields %}
+                        <th>{{header|title}}</th>
+                    {% endfor %}
+                </tr>
+              </thead>
+
+              
+              <tbody>
+                {% for patient in callsumo.patients %}
+                  <tr>
+                    {% for key, value in patient.items %}
+                         <td>{{value}}</td>
+                      {% endfor %}
+                  </tr>
+                 {% endfor %}
+
+
+              </tbody>
+            </table>
+          
+        </div>
+      </div>
+      <div class="box-table">
+        <div class="header">
+          <h4>JotForm (Request Appointments)</h4>
+        </div>
+        <div class="body-table">
+            <table class="table table-bordered table-striped table-condensed flip-content">
+              <thead>
+               
+                <tr>
+                    {% for key, value in jotform_appointment.0.items %}
+                        <th>{{key|title}}</th>
+                    {% endfor %}
+                </tr>
+              </thead>
+
+              
+              <tbody>
+                {% for patient in jotform_appointment %}
+                  <tr>
+                    {% for key, value in patient.items %}
+                         <td>{{value}}</td>
+                      {% endfor %}
+                      <!-- <td>{{patien.date_submitted}}</td>
+                      <td>{{patient.detail}}</td>
+                      <td>{{patient.email}}</td>
+                      <td>{{patient.name}}</td>
+                      <td>{{patient.phone}}</td> -->
+                  </tr>
+                 {% endfor %}
+
+
+              </tbody>
+            </table>
+        </div>
+      </div>
+
+  </div>
 {% endblock %}

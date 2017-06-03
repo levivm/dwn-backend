@@ -2,6 +2,7 @@ from easy_pdf.rendering import render_to_pdf
 
 from .callsumo_report import CallSumoReport
 from .jotform_report import JotFormReport
+from utils.mailer import ReportEmail
 
 
 class OfficeReport:
@@ -75,12 +76,25 @@ class OfficeReport:
         # Get pdf report
         pdf = self.pdf_report()
 
-        # Send pdf file to a given email
+        Send pdf file to a given email
         self.send_report(
-            'levi@mrsft.com',
+            'henry@mrsft.com',
             pdf,
             'JotFormReport'
         )
+        # email_data = {
+        #     'subject': 'Report',
+        #     'to': email,
+        #     'context': {},
+        #     'body': 'report',
+        # }
+
+        # email = ReportEmail(**email_data)
+        # email.set_attachment(
+        #     file=pdf,
+        #     name='JotFormReport'
+        # )
+        # email.send()
 
     def pdf_report(self):
         """

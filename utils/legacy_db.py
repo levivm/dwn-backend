@@ -7,8 +7,8 @@ class CallSumoLegacyDB:
 
     connection = None
 
-    def __init__(self, connection_db='local_callsumo'):
-        self.connection = connections['local_callsumo'] \
+    def __init__(self, connection_db='callsumo_legacy'):
+        self.connection = connections['callsumo_legacy'] \
             if not self.connection else self.connection
         self.connection.autocommit = False
         # self.connection.isolation_level = None
