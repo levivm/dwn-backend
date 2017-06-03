@@ -93,8 +93,7 @@ class OfficeReport(ReportByEmailMixin):
         # Send pdf file to a given email
         self.send_reports(
             emails,
-            pdf_report,
-            'MonthlyReport'
+            pdf_report
         )
 
     def pdf_report(self):
