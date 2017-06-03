@@ -206,7 +206,7 @@ class CallSumoReport:
 
                 # Update calls by source counter
                 new_patients_by_source.update({
-                    call_source: new_patients_by_source.get(call_source) + 1
+                    call_source: new_patients_by_source.get(call_source, 0) + 1
                 })
 
                 # Append this patient to new patients from callsumo

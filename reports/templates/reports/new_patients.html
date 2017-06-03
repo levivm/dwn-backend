@@ -40,6 +40,10 @@
     .content-pdf .header-page .company p{
       margin: 0;
       color: #444d58;
+      font-weight: 400;
+      margin-top: 5px;
+    }
+    .content-pdf .header-page .company p span{
       font-weight: 600;
     }
     .content-pdf .title-section h3{
@@ -131,9 +135,10 @@
         <img src="https://s3.amazonaws.com/ct0/logos/agency/logo/96/58b7770156b1a2f3b840b26799d8876df0979192?1493588234" alt="">
       </div>
       <div class="company">
-        <a href="">Dr KA</a>
-        <p>Monthly Report</p>
-        <p>May 2017</p>
+        <a href="">{{office_name}}</a>
+        <p>Report</p>
+        <p><span>From: </span>{{from_date}}</p>
+        <p><span>To: </span>{{to_date}}</p>
       </div>
     </div>
     <div class="title-section">
