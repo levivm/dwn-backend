@@ -159,7 +159,7 @@ class OfficeReport(ReportByEmailMixin):
             office_name = account.get('name')
             account_id = account.get('id')
 
-            if account_id not in [75367, 99878]:
+            if account_id not in [75367]:
                 continue
 
             # Generate the report
