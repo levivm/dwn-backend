@@ -70,7 +70,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'django_extensions',
     'rest_framework_docs',
-    'easy_pdf'
+    'easy_pdf',
 ]
 
 LOCAL_APPS = [
@@ -225,3 +225,12 @@ JOTFORM_HOST = "https://api.jotform.com/"
 
 # FRONTEND URL
 FRONTEND_URL = 'http://localhost:8080'
+
+# CELERY CONFIGURATION
+# REDIS CONFIG
+REDIS_HOST_ADDR = 'redis'
+REDIS_PORT = '6379'
+
+# BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = 'redis://{host}:{port}/0'.format(host=REDIS_HOST_ADDR, port=REDIS_PORT)
+CELERY_RESULT_BACKEND = 'redis://{host}/0'.format(host=REDIS_HOST_ADDR)

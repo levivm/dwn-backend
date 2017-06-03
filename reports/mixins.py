@@ -3,11 +3,11 @@ from utils.mailer import ReportEmail
 
 class ReportByEmailMixin:
 
-    def send_report(self, email, pdf_report, name):
+    def send_report(self, emails, pdf_report, name):
 
         email_data = {
             'subject': 'Report',
-            'to': email,
+            'to': emails,
             'context': {},
             'body': 'report',
         }

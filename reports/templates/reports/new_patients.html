@@ -146,8 +146,8 @@
         <i class="fa fa-phone" aria-hidden="true"></i>
 
       </div>
-      <div class="box green">
-        <h4>120</h4>
+      <div class="box green" id="green">
+        <h4>{{callsumo.patients|length}}</h4>
         <p>New Patiens</p>
         <i class="fa fa-address-book-o" aria-hidden="true"></i>
       </div>
@@ -177,7 +177,7 @@
                     <b>Total</b>
                 </td>
                 <td>
-                    <b>{{new_patients|length}}</b>
+                    <b>{{callsumo.patients|length}}</b>
                 </td>        
             </tr>
             </tbody>
@@ -253,4 +253,7 @@
       </div>
 
   </div>
+  <script>
+      document.getElementById("green").style.backgroundColor = "green";
+    </script>
 {% endblock %}
