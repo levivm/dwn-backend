@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 class BaseEmail(object):
 
     def __init__(self, *args, **kwargs):
-        self.to = kwargs.get('to')
+        self.to_emails = kwargs.get('to')
         self.template_name = kwargs.get('template_name')
         self.template_path = kwargs.get('template_path')
         self.subject = kwargs.get('subject')
@@ -23,7 +23,7 @@ class BaseEmail(object):
         self.email = EmailMultiAlternatives(self.subject, text_content)
         self.email.attach_alternative(html_content, "text/html")
         self.email.from_email = '(Dental Web Now) DWN Support <levi@mrsft.com>'
-        self.email.to = kwargs.get('to', ['levi@mrsft.com'])
+        self.email.to_emails = kwargs.get('to', ['levi@mrsft.com'])
 
     def send(self):
         self.email.send()
@@ -32,9 +32,10 @@ class BaseEmail(object):
 class ReportEmail(BaseEmail):
     MIME_TYPE = 'application/pdf'
 
-    def set_attachment(self, file=None, name=None):
-        self.email.attach(
-            name,
-            file,
-            self.MIME_TYPE
-        )
+    def set_attachments(self, files=None):
+        for name, file in files.items():
+            self.email.attach(
+                name,
+                file,
+                self.MIME_TYPE
+            )

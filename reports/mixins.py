@@ -3,7 +3,8 @@ from utils.mailer import ReportEmail
 
 class ReportByEmailMixin:
 
-    def send_report(self, emails, pdf_report, name):
+    @classmethod
+    def send_reports(cls, emails, pdf_reports):
 
         email_data = {
             'subject': 'Report',
@@ -13,8 +14,7 @@ class ReportByEmailMixin:
         }
 
         email = ReportEmail(**email_data)
-        email.set_attachment(
-            file=pdf_report,
-            name=name
+        email.set_attachments(
+            files=pdf_reports,
         )
         email.send()
