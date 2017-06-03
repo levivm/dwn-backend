@@ -128,6 +128,54 @@
     .box-table .header h4{
       margin:0;
     }
+    .chart-content{
+      width: 100%;
+      position: relative;
+    }
+    .chart-content .bars{
+        width: 55%;
+        padding: 20px 26px;
+        box-sizing: border-box;
+        background: #fff;
+        border-radius: 4px;
+    }
+    .chart-content .bars .bar{
+      height: 20px;
+      background: gray;
+      margin-top: 10px;
+      position: relative;
+      border-radius: 2px;
+    }
+    .chart-content .bars .bar span{
+        font-size: 12px;
+        color: #fff;
+        /* text-align: right; */
+        margin-right: 3px;
+        position: absolute;
+        right: -30px;
+        color: #777;
+        top: 3px;
+    }
+    .chart-content .legend{
+      background: #fff;
+      width: 40%;
+      padding: 20px;
+      box-sizing: border-box;
+      margin-right: auto;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .chart-content .legend .text{
+      margin-top: 3px;
+    }
+    .chart-content .legend .text span:nth-child(1){
+      width: 12px;
+      height: 12px;
+      background: gray;
+      display: inline-block;
+      border-radius: 50%;
+    }
   </style>
     <div class="content-pdf">
       <div class="header-page">
@@ -256,9 +304,68 @@
             </table>
         </div>
       </div>
+      <div class="title-section">
+      <h3>New Patiens By Source</h3>
+    </div>
+    <div class="chart-content">
 
+      <div class="bars">
+        <div class="bar" style="width: 10%; background: blue">
+          <span>10%</span>
+        </div>
+        <div class="bar" style="width: 50%; background: red">
+          <span>10%</span>
+        </div>
+        <div class="bar" style="width: 30%; background: green">
+          <span>10%</span>
+        </div>
+        <div class="bar" style="width: 90%; background: gray">
+          <span>90%</span>
+        </div>
+        <div class="bar">
+        </div>
+        <div class="bar" style="width: 10%; background: black">
+          <span>10%</span>
+        </div>
+      </div>
+      <div class="legend">
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+        <div class="text">
+          <span class="color"></span>
+          <span>Google</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <script>
-      document.getElementById("green").style.backgroundColor = "green";
-    </script>
 {% endblock %}
