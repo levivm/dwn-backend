@@ -23,7 +23,7 @@ class BaseEmail(object):
         self.email = EmailMultiAlternatives(self.subject, text_content)
         self.email.attach_alternative(html_content, "text/html")
         self.email.from_email = '(Dental Web Now) DWN Support <levi@mrsft.com>'
-        self.email.to = [kwargs.get('to', 'levi@mrsft.com')]
+        self.email.to = kwargs.get('to', ['levi@mrsft.com'])
 
     def send(self):
         self.email.send()

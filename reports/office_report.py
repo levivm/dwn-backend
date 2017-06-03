@@ -1,10 +1,13 @@
 from easy_pdf.rendering import render_to_pdf
 
+from utils.ctm import CTMAPI
+
 from .callsumo_report import CallSumoReport
 from .jotform_report import JotFormReport
+from .mixins import ReportByEmailMixin
 
 
-class OfficeReport:
+class OfficeReport(ReportByEmailMixin):
     """
         Class  to get a whole office report,
         including callsumo and jotform reports
@@ -59,15 +62,18 @@ class OfficeReport:
             :returns: returns a dict containing callsumo and jotform reports
         """
         return {
+            'office_name': self.office_name,
+            'from_date': self.start_date,
+            'to_date': self.end_date,
             'callsumo': self.callsumo_report(),
             'jotform_appointment': self.jotform_report(
                 type='Appointment'
-            )
+            ),
         }
 
-    def send_report(self, email):
+    def send_report_by_email(self, emails=None):
         """
-            Sends a office report pdf to a given :param email:
+            Sends a office pdf report to a given :param email:
 
             :param email: this is the email used to send the report
         """
@@ -77,9 +83,9 @@ class OfficeReport:
 
         # Send pdf file to a given email
         self.send_report(
-            'levi@mrsft.com',
+            emails,
             pdf,
-            'JotFormReport'
+            'MonthlyReport'
         )
 
     def pdf_report(self):

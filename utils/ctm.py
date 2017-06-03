@@ -134,6 +134,10 @@ class CTMAPI():
         range_header = request.META.get("HTTP_RANGE")
         return self.get_file(endpoint, content_type, range_header)
 
+    def get_account_info(self, account_id):
+        endpoint = '/accounts/%s' % (account_id,)
+        return self.get(endpoint)
+
     def get_all_accounts(self):
         endpoint = '/accounts?names=1&all=1'
         return self.get(endpoint)
