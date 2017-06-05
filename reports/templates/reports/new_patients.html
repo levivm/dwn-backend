@@ -10,6 +10,7 @@
         margin-right: 1.5cm;
         margin-top: 1.5cm;
         margin-bottom: 1.5cm;
+        background: #eff3f8;
     }
     body{
       font-family: 'Helvetica', sans-serif;
@@ -114,7 +115,7 @@
         margin-bottom: 30px;
         margin-top: 30px;
         width: 100%;
-        border: 1px solid rgba(68, 77, 88, 0.45);
+        /*border: 1px solid rgba(68, 77, 88, 0.45);*/
     }
     .box-table .header{
       background: #444d58;
@@ -132,46 +133,28 @@
       width: 100%;
       position: relative;
     }
-    .chart-content .bars{
-        width: 55%;
-        padding: 20px 26px;
-        box-sizing: border-box;
-        background: #fff;
-        border-radius: 4px;
+    .chart-content .percentage .bar{
+      height: 10px;
+        margin-top: 7px;
+        position: relative;
+        border-radius: 2px;
+        display: inline-block;
     }
-    .chart-content .bars .bar{
-      height: 20px;
-      background: gray;
-      margin-top: 10px;
-      position: relative;
-      border-radius: 2px;
-    }
-    .chart-content .bars .bar span{
+    .chart-content .bars .percentage span{
         font-size: 12px;
-        color: #fff;
-        /* text-align: right; */
-        margin-right: 3px;
-        position: absolute;
-        right: -30px;
-        color: #777;
-        top: 3px;
+        color: #3e3c3c;
+        vertical-align: text-top;
+        display: inline-block;
+        margin-top: 2px;
     }
     .chart-content .legend{
       background: #fff;
-      width: 40%;
-      padding: 20px;
       box-sizing: border-box;
-      margin-right: auto;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-    .chart-content .legend .text{
-      margin-top: 3px;
+      margin-top: 0;
     }
     .chart-content .legend .text span:nth-child(1){
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       background: gray;
       display: inline-block;
       border-radius: 50%;
@@ -194,18 +177,22 @@
     </div>
     <div class="boxs-summary">
       <div class="box">
-        <h4>346</h4>
+        <h4>{{jotform_appointment|length}}</h4>
         <p>Total Calls</p>
         <i class="fa fa-phone" aria-hidden="true"></i>
 
       </div>
       <div class="box green" id="green">
         <h4>{{callsumo.patients|length}}</h4>
-        <p>New Patiens</p>
+        <p>New Patients</p>
         <i class="fa fa-address-book-o" aria-hidden="true"></i>
       </div>
     </div>
-      <div class="box-table">
+    <div class="title-section">
+       <h3>New Patients By Source</h3>
+    </div>
+    <div class="chart-content">
+      <div class="legend box-table">
         <div class="header">
           <h4>Calls By Source</h4>
         </div>
@@ -215,14 +202,26 @@
               <tr>
                   <th>Source</th>
                   <th>New Patients</th>
+                  <th>Percentages</th>
               </tr>
             </thead>
             <tbody>
 
             {% for source, value in callsumo.sources.items %}
              <tr>
-                <td>{{source}}</td>
-                <td>{{value}}</td>
+                <td>
+                    <div class="text">
+                      <span class="color" style="background: {{value.color}}"></span>
+                      <span>{{source}}</span>
+                    </div>
+                 </td>
+                <td>{{value.value}}</td>
+                <td>
+                  <div class="percentage">
+                    <div class="bar" style="width: {{value.percentage}}px; background: {{value.color}}"> </div>
+                    <span>{{value.percentage}}%</span>
+                  </div>
+                </td>
             </tr>
             {% endfor %}
               <tr>
@@ -231,6 +230,9 @@
                 </td>
                 <td>
                     <b>{{callsumo.patients|length}}</b>
+                </td>
+                <td>
+                    <b>100%</b>
                 </td>        
             </tr>
             </tbody>
@@ -238,6 +240,9 @@
         </div>
         
       </div>
+    </div>
+
+
       <div class="box-table">
         <div class="header">
           <h4>New Patients</h4>
@@ -304,68 +309,9 @@
             </table>
         </div>
       </div>
-      <div class="title-section">
-      <h3>New Patiens By Source</h3>
-    </div>
-    <div class="chart-content">
-
-      <div class="bars">
-        <div class="bar" style="width: 10%; background: blue">
-          <span>10%</span>
-        </div>
-        <div class="bar" style="width: 50%; background: red">
-          <span>10%</span>
-        </div>
-        <div class="bar" style="width: 30%; background: green">
-          <span>10%</span>
-        </div>
-        <div class="bar" style="width: 90%; background: gray">
-          <span>90%</span>
-        </div>
-        <div class="bar">
-        </div>
-        <div class="bar" style="width: 10%; background: black">
-          <span>10%</span>
-        </div>
-      </div>
-      <div class="legend">
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-        <div class="text">
-          <span class="color"></span>
-          <span>Google</span>
-        </div>
-      </div>
-    </div>
+      
   </div>
+  <script>
+      //document.getElementById("green").style.backgroundColor = "green";
+    </script>
 {% endblock %}
