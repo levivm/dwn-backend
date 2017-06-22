@@ -75,6 +75,8 @@ class JotFormReport(FilterMixin, ReportByEmailMixin):
 
     @staticmethod
     def _get_answer(value, answers):
+        if not answers:
+            return {}
         answer = list(filter(
             lambda answer: value in answer[1].get('text').lower(),
             answers.items()

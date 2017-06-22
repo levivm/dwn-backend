@@ -119,24 +119,27 @@ class OfficeReport(ReportByEmailMixin):
 
     @classmethod
     def send_monthly_reports(cls):
+        """
+            Send all offices monthly reports by email
+        """
         # Get today date
         today = datetime.datetime.today()
 
         # Get how many days has the current month
         months_days = calendar.monthrange(
             today.year,
-            today.month
+            5
         )[1]
 
         # Date representing the first day of the current month
         first_day_month_date = datetime.date(
             today.year,
-            today.month,
+            5,
             1
         )
 
         # Convert date to string
-        first_day_month = first_day_month_date.strftime("%Y-%d-%m")
+        first_day_month = first_day_month_date.strftime("%Y-%m-%d")
 
         # Date representing the last day of the current month
         last_day_month_date = first_day_month_date + datetime.timedelta(
@@ -144,7 +147,7 @@ class OfficeReport(ReportByEmailMixin):
         )
 
         # Convert date to string
-        last_day_month = last_day_month_date.strftime("%Y-%d-%m")
+        last_day_month = last_day_month_date.strftime("%Y-%m-%d")
 
         # Get all accounts from CTM API
         accounts_data = cls.ctm_api.get_all_accounts()
@@ -159,8 +162,8 @@ class OfficeReport(ReportByEmailMixin):
             office_name = account.get('name')
             account_id = account.get('id')
 
-            if account_id not in [75367]:
-                continue
+            # if account_id not in [99878]:
+                # continue
 
             # Generate the report
             report = cls(

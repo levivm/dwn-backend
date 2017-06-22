@@ -1,12 +1,18 @@
 import json
+import copy
 import base64
 import requests
 from urllib.parse import urlencode
+from collections import OrderedDict
+
 
 from django.conf import settings
 
+from utils.filters_mixin import FilterMixin
+from utils.legacy_db import CallSumoLegacyDB
 
-class CTMAPI():
+
+class CTMAPI(FilterMixin):
 
     CTM_TOKEN = settings.CTM_TOKEN
     CTM_SECRET = settings.CTM_SECRET
@@ -50,8 +56,137 @@ class CTMAPI():
         return response
 
     def get_calls(self, account_id, page, query_params=None):
+
         endpoint = '/accounts/%s/calls?%s' % (account_id, query_params.urlencode())
-        return self.get(endpoint)
+
+        # # If not untagged_calls flag is present, return normal  calls
+        if not query_params.get('untagged_calls'):
+            return self.get(endpoint)
+
+        # Return filtered unique untagged calls from ctm calls response
+        return self.get_untagged_calls(
+            account_id,
+            page,
+            query_params
+        )
+
+    def get_untagged_calls(self, account_id, page, query_params=None):
+        # Get calls response
+        endpoint = '/accounts/%s/calls?%s' % (
+            account_id,
+            query_params.urlencode()
+        )
+        calls_response_ = self.get(endpoint)
+
+        calls_response = copy.deepcopy(calls_response_)
+
+        calls = calls_response.get(
+            'calls',
+            []
+        )
+
+        # Created ordered dict for grouping calls
+        grouped_calls = OrderedDict()
+
+        # print(calls_response)
+        # Empty calls
+        calls_response.update({
+            'calls': []
+        })
+
+        # group calls by number
+        for call in calls:
+            number = call.get('caller_number')
+            grouped_calls.update({
+                number: grouped_calls.get(
+                    number,
+                    []
+                ) + [call]
+            })
+
+        # Init call sumo legacy db
+        callsumo_db = CallSumoLegacyDB()
+
+        # Get all phone number from an account
+        phone_list = callsumo_db.get_numbers_from_practice(account_id)
+
+        existing_numbers = {}
+
+        # Create a dictionary with fetched number using number as key
+        for phone in phone_list:
+            if existing_numbers.get(phone.get('phone_number'), False):
+                print("This number already exists: %s", phone.get('phone_number'))
+            existing_numbers.update({
+                phone.get('phone_number'): phone
+            })
+
+        filtered_calls = []
+
+        for number, calls in grouped_calls.items():
+            # Check if the number is a lead or not
+            # depending if it is already an existing number
+            # or it was marked as inquiry
+            # TODO: Order existinng number by date and get last of them, by
+            # classify_date attribute
+            number_is_lead = any(
+                map(
+                    lambda call:
+                        not existing_numbers.get(
+                            call.get(
+                                'caller_number_bare',
+                                '',
+                            ),
+                            None
+                        ) or 'inquiry' in existing_numbers.get(
+                            call.get(
+                                'caller_number_bare',
+                                '',
+                            ),
+                            {}
+                        ).get('record_type', ''),
+                    calls
+                )
+            )
+
+            if number_is_lead:
+                filtered_calls += calls
+
+        # Update calls response with filtered calls
+        calls_response.update({
+            'calls': filtered_calls
+        })
+
+        return calls_response
+
+    def get_unique_untagged_calls(self, account_id, page, query_params=None):
+
+        # Get unique calls response
+        unique_calls_response = self.get_unique_calls(
+            account_id,
+            page,
+            query_params
+        )
+
+        # Get calls from unique calls response
+        calls = unique_calls_response.get(
+            'calls',
+            []
+        )
+
+        # Copy unique calls response to unique calls dict
+        unique_untagged_calls = copy.deepcopy(unique_calls_response)
+
+        # Empty calls gotten from unique calls response
+        unique_untagged_calls['calls'] = []
+
+        # Get all untagged calls by checking if they have only ar2:lead and
+        # ar2:autoreporting tags
+        for call in calls:
+            tags = call.get('tag_list', [])
+            if set(tags).issubset({'ar2:lead', 'ar2:autoreported'}):
+                unique_untagged_calls['calls'].append(call)
+
+        return unique_untagged_calls
 
     def get_calls_all(self, account_id, query_params, page=1):
 

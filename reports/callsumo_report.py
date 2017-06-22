@@ -115,6 +115,7 @@ class CallSumoReport:
     @classmethod
     def _parse_new_patients_by_source_response(
         cls,
+        calls,
         new_patients,
         new_patients_by_source
     ):
@@ -142,7 +143,10 @@ class CallSumoReport:
 
         # Set percentage for every source and assign it a color
         for source, data in new_patients_by_source_data.items():
-            percentage = (100 * data.get('value')) / new_patients_amount
+            try:
+                percentage = (100 * data.get('value')) / new_patients_amount
+            except ZeroDivisionError:
+                percentage = 0.0
             data.update({
                 'color': colors.pop(),
                 'percentage': "{0:0.1f}".format(percentage)
@@ -153,6 +157,7 @@ class CallSumoReport:
         fields = list(PatientsReportSerializer().get_fields())
 
         return {
+            'calls': len(calls),
             'patients': new_patients_data,
             'sources': new_patients_by_source_data,
             'fields': fields
@@ -261,6 +266,7 @@ class CallSumoReport:
                 new_patients_from_callsumo.append(patient)
 
         return self._parse_new_patients_by_source_response(
+            calls,
             new_patients_from_callsumo,
             new_patients_by_source
         )

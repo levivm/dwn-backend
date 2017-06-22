@@ -35,7 +35,7 @@ class CallSumoLegacyDB:
 
         return
 
-    def _generic_where_query(self, select_query, from_query, where_query, values):
+    def _generic_where_query(self, select_query, from_query, where_query, values, extra=None):
 
         # Open cursor
         with self.connection.cursor() as cursor:
@@ -44,6 +44,7 @@ class CallSumoLegacyDB:
                 # Generic query made up using table, lookup field and value
                 query = """SELECT * FROM %s""" % (from_query,)
                 query += """ WHERE {}""".format(where_query,)
+                query += """ {} """.format(extra,) if extra else ''
 
                 # Execute select query
                 cursor.execute(
@@ -372,3 +373,41 @@ class CallSumoLegacyDB:
         )
 
         return new_patients
+
+    def get_practice_by_ctm_account(self, ctm_account_id):
+        select_query = "*"
+        from_query = 'practice'
+        values = {
+            'ctm_account_id': ctm_account_id
+        }
+
+        where_query = 'ctm_account_id=%(ctm_account_id)s'
+        practice_response = self._generic_where_query(
+            select_query,
+            from_query,
+            where_query,
+            values
+        )
+
+        return practice_response.pop() if practice_response else None
+
+    def get_numbers_from_practice(self, ctm_account_id):
+
+        practice = self.get_practice_by_ctm_account(ctm_account_id)
+        select_query = "phone_number"
+        from_query = 'phone_list'
+        values = {
+            'dwn_practice_id': practice.get('dwn_practice_id')
+        }
+        # extra = "ORDER BY classify_date DESC LIMIT 1"
+
+        where_query = 'dwn_practice_id=%(dwn_practice_id)s'
+        numbers = self._generic_where_query(
+            select_query,
+            from_query,
+            where_query,
+            values,
+            # extra
+        )
+
+        return numbers
