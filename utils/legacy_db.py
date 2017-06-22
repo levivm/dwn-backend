@@ -13,7 +13,7 @@ class CallSumoLegacyDB:
         self.connection.autocommit = False
         # self.connection.isolation_level = None
 
-    def _generic_exists_query(self, table, lookup_field, value):
+    def _generic_exists_query(self, table, lookup_field, value, extra):
 
         # Open cursor
         with self.connection.cursor() as cursor:
@@ -399,7 +399,7 @@ class CallSumoLegacyDB:
         values = {
             'dwn_practice_id': practice.get('dwn_practice_id')
         }
-        # extra = "ORDER BY classify_date DESC LIMIT 1"
+        extra = "ORDER BY classify_date DESC LIMIT 1"
 
         where_query = 'dwn_practice_id=%(dwn_practice_id)s'
         numbers = self._generic_where_query(
@@ -407,7 +407,7 @@ class CallSumoLegacyDB:
             from_query,
             where_query,
             values,
-            # extra
+            extra
         )
 
         return numbers

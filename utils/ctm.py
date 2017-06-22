@@ -88,7 +88,6 @@ class CTMAPI(FilterMixin):
         # Created ordered dict for grouping calls
         grouped_calls = OrderedDict()
 
-        # print(calls_response)
         # Empty calls
         calls_response.update({
             'calls': []
@@ -114,40 +113,59 @@ class CTMAPI(FilterMixin):
 
         # Create a dictionary with fetched number using number as key
         for phone in phone_list:
-            if existing_numbers.get(phone.get('phone_number'), False):
-                print("This number already exists: %s", phone.get('phone_number'))
             existing_numbers.update({
                 phone.get('phone_number'): phone
             })
 
+        # Init filtered calls
         filtered_calls = []
 
         for number, calls in grouped_calls.items():
             # Check if the number is a lead or not
             # depending if it is already an existing number
-            # or it was marked as inquiry
-            # TODO: Order existinng number by date and get last of them, by
-            # classify_date attribute
-            number_is_lead = any(
+            # and if no exists check if it only has ar2:autoreported
+            # and ar2:lead tags only
+            # If the number exists, we mark as lead if it is tagged still
+            # as an inquiry
+            number_is_lead = all(
                 map(
                     lambda call:
-                        not existing_numbers.get(
+                        existing_numbers.get(
                             call.get(
                                 'caller_number_bare',
                                 '',
                             ),
                             None
-                        ) or 'inquiry' in existing_numbers.get(
-                            call.get(
-                                'caller_number_bare',
-                                '',
-                            ),
-                            {}
-                        ).get('record_type', ''),
+                        ) is None and
+                        set(call.get(
+                            'tag_list',
+                            [],
+                        )).issubset({
+                            'ar2:lead',
+                            'ar2:autoreported'
+                        }) or (
+                            existing_numbers.get(
+                                call.get(
+                                    'caller_number_bare',
+                                    '',
+                                ),
+                                None
+                            ) and 'inquiry' in existing_numbers.get(
+                                call.get(
+                                    'caller_number_bare',
+                                    '',
+                                ),
+                                {}
+                            ).get(
+                                'record_type',
+                                ''
+                            )
+                        ),
                     calls
                 )
             )
 
+            # If the number is a lead, we add it's calls to filtered calls
             if number_is_lead:
                 filtered_calls += calls
 
