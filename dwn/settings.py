@@ -25,7 +25,7 @@ IS_PRODUCTION = os.environ.get('PRODUCTION_SERVER', False)
 SECRET_KEY = 'ce&@w*$-nj0nsh0a3(j*w3$et_5=r=b075l6xceis_p$aso8u2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if IS_PRODUCTION else True
+DEBUG = True if IS_PRODUCTION else True
 
 ALLOWED_HOSTS = ['*']
 
@@ -155,7 +155,7 @@ else:
             'NAME': 'dwn',
             'USER': 'dwn',
             'HOST': 'db',
-            'PASSWORD': 'dwn',
+            'PASSWORD': "dwn",
             'PORT': 5432,
         },
         'callsumo_legacy': callsumo_legacy_db

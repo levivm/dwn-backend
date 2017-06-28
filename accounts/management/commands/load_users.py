@@ -40,19 +40,18 @@ class Command(BaseCommand):
                 )
 
                 if not created:
-                    continue
 
-                Token.objects.get_or_create(user=user)
+                    Token.objects.get_or_create(user=user)
 
-                user.set_password('%spassword' % email)
-                user.save()
+                    user.set_password('%spassword' % email)
+                    user.save()
 
                 role = user_data.get('role')
-                profile = Profile.objects.create(
+                profile, created = Profile.objects.get_or_create(
                     user=user
                 )
 
-                Membership.objects.create(
+                Membership.objects.get_or_create(
                     profile=profile,
                     role=role,
                     account=account

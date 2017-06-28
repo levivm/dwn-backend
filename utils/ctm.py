@@ -165,9 +165,15 @@ class CTMAPI(FilterMixin):
                 )
             )
 
-            # If the number is a lead, we add it's calls to filtered calls
+            # If the number is a lead, we add unprocessed tag
+            # to it's calls
             if number_is_lead:
-                filtered_calls += calls
+                for call in calls:
+                    call.update({
+                        'unprocessed': True
+                    })
+
+            filtered_calls += calls
 
         # Update calls response with filtered calls
         calls_response.update({
